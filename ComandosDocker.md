@@ -10,7 +10,14 @@
     `docker images`
 
 - Borrar imágenes  
-    `docker image rm <id>`
+    `docker image rm <id>`  
+
+- Guardar imagen en .tar  
+    `docker image save -o <output.tar file> <image name>`  
+    `docker image save -o vsw_prod1.0.tar vsweb_prod:1.0`  
+
+- Recuperar imágenes de un .tar  
+    `docker image load -i <fichero .tar>`
 
 ## Contenedores
 - Crear un contenedor  

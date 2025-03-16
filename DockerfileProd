@@ -1,0 +1,17 @@
+ARG PLATFORM=linux/arm64/v8
+FROM --platform=${PLATFORM} python:3.13.2-alpine3.21 
+
+RUN addgroup hfpython && adduser -S -G hfpython hfpython
+USER hfpython
+
+WORKDIR /usr/src/app
+
+COPY --chown=hfpython requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY --chown=hfpython *.py .
+COPY --chown=hfpython templates/* templates/
+COPY --chown=hfpython static/* static/
+
+EXPOSE 5000
+CMD [ "python", "vsearchweb.py" ]

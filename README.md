@@ -31,4 +31,26 @@ En 2 pasos:
     - Apply & Restart  
     
     2.2 En docker run agregar  
-    - `docker run --network host ...`
+    - `docker run --network host ...`  
+
+## 2025/03/16 - Corregir imagen para poder usarla en RPi desde Windows
+
+Con esta versión creo la imagen de producción en Windows y la puedo probar en Windows o pasarla a Rpi y probar en remoto.   
+
+Creo un Dockerfile para producción donde quito lo de los volúmenes para hacer pruebas y dejo la copia directa de los directorios templates y static.  
+
+Sigo la secuencia:  
+- Crear imagen  
+- Guardarla como .tar  
+- Copiarla (rcp) a Rpi  
+- En Rpi, cargar  del .tar a imagen  
+- Crear el contenedor (docker run)  
+
+### Problema:  
+> WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested exec /usr/local/bin/python: exec format error
+### Solución:  
+Agregar en el dockerfile lo siguiente:  
+```
+ARG PLATFORM=linux/arm64/v8
+FROM --platform=${PLATFORM} python:3.13.2-alpine3.21 
+```
