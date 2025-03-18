@@ -1,0 +1,26 @@
+# ******************
+# *** PRODUCCIÓN ***
+# ******************
+
+ARG PLATFORM=linux/arm64/v8
+FROM --platform=${PLATFORM} python:3.13.2-alpine3.21 
+
+# He quitado el usuario y lo he dejado en root por defecto
+# para que me funcione lo de los BIND_MOUNTS
+# 
+# RUN addgroup hfpython && adduser -S -G hfpython hfpython
+# USER hfpython
+
+WORKDIR /usr/src/app
+
+COPY --chown=hfpython requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY --chown=hfpython *.py .
+COPY --chown=hfpython templates/* templates/
+COPY --chown=hfpython static/* static/
+
+# RUN --mount=type=bind,source=var,destination=/usr/src/app,readwrite
+
+EXPOSE 5000
+CMD [ "python", "vsearchweb.py" ]
