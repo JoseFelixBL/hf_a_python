@@ -4,7 +4,12 @@
 - Crear imagen  
     `docker build -t <nombre> .`  
     + Ejemplo:  
-      `docker build -t vsweb:1.12 .`
+      `docker build -t vsweb:1.12 .`  
+- Crear imagen usando Dockerfile con otro nombre  
+    `docker build -t <nombre> -f <Docker file name> .`  
+    + Ejemplo:  
+      `docker build -t vsweb:1.12 --file DockerfileProd .`  
+
 
 - Ver imágenes creadas disponibles  
     `docker images`
