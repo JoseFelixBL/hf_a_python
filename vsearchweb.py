@@ -34,9 +34,16 @@ def entry_page() -> 'html':
 
 @app.route('/viewlog')
 def view_the_log() -> str:
+    content = []
     with open(log_file) as log:
-        contents = log.read()
-    return escape(contents)
+        for line in log:
+            content.append([])
+            for item in line.split('|'):
+                content[-1].append(escape(item))
+
+    title = 'Log View'
+    row_titles = ('Form Data', 'Remote_addr', 'User_agent', 'Results')
+    return render_template('viewlog.html', the_title=title, the_row_titles=row_titles, the_data=content)
 
 
 if __name__ == '__main__':
