@@ -54,3 +54,22 @@ Agregar en el dockerfile lo siguiente:
 ARG PLATFORM=linux/arm64/v8
 FROM --platform=${PLATFORM} python:3.13.2-alpine3.21 
 ```
+
+## 2025/03/21 - USER y bind_mount con usuario diferente -problemas de permisos
+
+Al usar USER para no estar con root, al usar un bind_mount el directorio y los ficheros quedan con un usuario diferente y no permite modificarlos.  
+
+Tampoco funciona si hago el bind_mount desde `docker run ...`.  
+
+### By-pass
+No crear ni usar usuario en Dockerfile.
+
+## 2025/03/21 - `RUN --mount=type=bind,source=...` no hace nada
+
+Al usar `RUN --mount=type=bind,source=...` en Dockerfile no se monta el directorio.  
+
+### By-pass
+Montar el  volumen desde `docker run --mount type=bind,...`  
+
+- `docker run -it -p 5000:5000 --mount type=bind,source=/home/jose/workspace/docker/hf_a_python/var,dst=/usr/src/app/var 
+vs_root:0.3`

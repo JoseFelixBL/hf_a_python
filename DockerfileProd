@@ -20,11 +20,14 @@ RUN pip install --no-cache-dir -r requirements.txt
 # COPY --chown=hfpython *.py .
 # COPY --chown=hfpython templates/* templates/
 # COPY --chown=hfpython static/* static/
+
 COPY *.py .
 COPY templates/* templates/
 COPY static/* static/
 
-# RUN --mount=type=bind,source=var,destination=/usr/src/app,readwrite
+RUN --mount=type=bind,source=./var,target=/usr/src/app/var,readwrite
+# RUN --mount=type=bind,source=./static,target=/usr/src/app/static,readwrite
+# RUN --mount=type=bind,source=./templates,target=/usr/src/app/templates,readwrite
 
 EXPOSE 5000
 CMD [ "python", "vsearchweb.py" ]
