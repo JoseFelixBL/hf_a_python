@@ -2,6 +2,7 @@ from flask import Flask, render_template, request
 from markupsafe import escape
 from vsearch import search4letters
 from pathlib import Path
+import mariadb
 
 app = Flask(__name__)
 
@@ -11,8 +12,35 @@ log_file = log_dir / log_name
 
 
 def log_request(req: 'flask_request', res: str) -> None:
-    with open(log_file, 'a') as log:
-        print(req.form, req.remote_addr, req.user_agent, res, file=log, sep='|')
+    """Log details of the web request and the results."""
+    # Lo anterior:
+    # with open(log_file, 'a') as log:
+    #     print(req.form, req.remote_addr, req.user_agent, res, file=log, sep='|')
+
+    # Solo req.user_agent.string tiene contenido.
+    # print(dir(req))
+    # print(dir(req.user_agent))
+    # print(f'{req.user_agent.browser=}', f'{req.user_agent.language=}', f'{req.user_agent.platform=}',
+    #       f'{req.user_agent.string=}', f'{req.user_agent.to_header=}', f'{req.user_agent.version=}')
+
+    dbconfig = {'host': '127.0.0.1',
+                'user': 'vsearch',
+                'password': 'vsearchpasswd',
+                'database': 'vsearchlogDB', }
+    conn = mariadb.connect(**dbconfig)
+    cursor = conn.cursor()
+    _SQL = """insert into log  
+              (phrase, letters, ip, browser_string, results) 
+              values 
+              (%s, %s, %s, %s, %s)"""
+    cursor.execute(_SQL, (req.form['phrase'],
+                          req.form['letters'],
+                          req.remote_addr,
+                          req.user_agent.string,
+                          res, ))
+    conn.commit()
+    cursor.close()
+    conn.close()
 
 
 @app.route('/search4', methods=['POST'])
