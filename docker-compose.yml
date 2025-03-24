@@ -1,0 +1,47 @@
+# version not needed anymore
+# version: '3.4'
+
+services:
+  # Servicio de mariadb-server
+  db:
+    # Cogemos la imagen de mariadb server
+    image: mariadb:latest
+    # Le damos nombre al contenedor
+    container_name: mariadb_container
+    # Variables de entorno, provisionadas pero no usadas de momento
+    environment:
+      MARIADB_ROOT_PASSWORD: rootpassword
+      MARIADB_DATABASE: vsearchlogDB
+      MARIADB_USER: vsearch
+      MARIADB_PASSWORD: vsearchpasswd
+    # No necesitamos exponer los puertos poruqe sólo se usan entre servicios
+    # no los usamos en el mundo/web/red exterior
+    # ports:
+    #   - "3306:3306"
+    volumes:
+      # Guardar la base de datos en un lugar asequible con Bind-Mount
+      - ./db/data:/var/lib/mysql
+      # Ubicación del fichero init.sql para que se ejecute cuando no haya DB
+      - ./db/sql:/docker-entrypoint-initdb.d
+  # Servicio de nuestra aplicación
+  hfapython:
+    # Esperamos a que la base de datos esté lista
+    depends_on:
+      - db
+    # Nombre de la imagen
+    image: hfapython
+    # Le decimos que la tiene que crear con el Dockerfile
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    # Puertos que usarán desde fuera hacia adentro
+    ports:
+      - 5000:5000
+    # Variable de entorno para comunicar mi servicio 
+    # con el host que da servicio a la db
+    environment:
+      DB_HOST: db
+
+# De momento no usamos volúmenes nombrados...
+# volumes:
+#   db_data:

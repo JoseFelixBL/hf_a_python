@@ -1,16 +1,14 @@
 from flask import Flask, render_template, request
 from markupsafe import escape
 from vsearch import search4letters
-from pathlib import Path
 from DBcm import UseDatabase
+import os
 
 app = Flask(__name__)
 
-# app.config['log_dir'] = Path('var')
-# app.config['log_name'] = Path('vsearch.log')
-# app.config['log_file'] = app.config['log_dir'] / app.config['log_name']
+HOST = os.getenv('DB_HOST')
 
-app.config['dbconfig'] = {'host': '127.0.0.1',
+app.config['dbconfig'] = {'host': HOST,
                           'user': 'vsearch',
                           'password': 'vsearchpasswd',
                           'database': 'vsearchlogDB', }
