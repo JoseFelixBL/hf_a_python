@@ -10,6 +10,8 @@ app = Flask(__name__)
 app.secret_key = 'YouWillNeverGuessMySecretKey'
 
 HOST = os.getenv('DB_HOST')
+if HOST is None or HOST == '':
+    HOST = '127.0.0.1'
 
 app.config['dbconfig'] = {'host': HOST,
                           'user': 'vsearch',

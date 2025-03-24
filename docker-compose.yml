@@ -23,6 +23,7 @@ services:
       - ./db/data:/var/lib/mysql
       # Ubicación del fichero init.sql para que se ejecute cuando no haya DB
       - ./db/sql:/docker-entrypoint-initdb.d
+
   # Servicio de nuestra aplicación
   hfapython:
     # Esperamos a que la base de datos esté lista
@@ -32,7 +33,7 @@ services:
     image: hfapython
     # Le decimos que la tiene que crear con el Dockerfile
     build:
-      context: .
+      context: ./app
       dockerfile: ./Dockerfile
     # Puertos que usarán desde fuera hacia adentro
     ports:
