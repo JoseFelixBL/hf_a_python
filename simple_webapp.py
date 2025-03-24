@@ -1,13 +1,8 @@
 from flask import Flask, session
+from checker import check_logged_in
 
 app = Flask(__name__)
-app.secretkey = 'YouWillNeverGuessMySecretKey'
-
-
-def check_logged_in() -> bool:
-    if 'logged_in' in session:
-        return True
-    return False
+app.secret_key = 'YouWillNeverGuessMySecretKey'
 
 
 @app.route('/')
@@ -16,23 +11,20 @@ def hello() -> str:
 
 
 @app.route('/page1')
+@check_logged_in
 def page1() -> str:
-    if not check_logged_in():
-        return 'You are NOT logged in.'
     return 'This is page 1.'
 
 
 @app.route('/page2')
+@check_logged_in
 def page2() -> str:
-    if not check_logged_in():
-        return 'You are NOT logged in.'
     return 'This is page 2.'
 
 
 @app.route('/page3')
+@check_logged_in
 def page3() -> str:
-    if not check_logged_in():
-        return 'You are NOT logged in.'
     return 'This is page 3.'
 
 
@@ -44,7 +36,8 @@ def login() -> 'str':
 
 @app.route('/logout')
 def logout() -> 'str':
-    session.pop('logged_in')
+    if 'logged_in' in session:
+        session.pop('logged_in')
     return 'You are now logged OUT'
 
 
