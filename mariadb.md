@@ -1,18 +1,26 @@
+# Pasos para instalar MariaDB-server  
+
 # Instalar MariaDB
-> sudo apt install mariadb-server
+`sudo apt install mariadb-server`
 
-# Inicia el servidor
+## Inicia el servidor
 
-> sudo service mysql start
+`sudo service mysql start`
 
-# Iniciar el aseguramiento del servidor
+## Iniciar el aseguramiento del servidor
 
-> sudo mysql_secure_installation
+`sudo mysql_secure_installation`
 
-# Crear usuario con todos los permisos
+# Entrar como root para crear usuarios, bases de datos, tablas
 
-> sudo mysql -u root
+`sudo mysql -u root`  
 
+...o también:  
+`sudo mariadb -u root`  
+
+## Crear usuario con todos los permisos
+
+```
 CREATE USER 'usuario'@'localhost' IDENTIFIED BY 'contraseña';
 
 GRANT ALL PRIVILEGES ON * . * TO 'usuario'@'localhost';
@@ -20,18 +28,21 @@ GRANT ALL PRIVILEGES ON * . * TO 'usuario'@'localhost';
 FLUSH PRIVILEGES;
 
 EXIT;
+```
 
-# Activar Log de Consultas
-> sudo nano /etc/mysql/mariadb.conf.d/50-server.cnf
+## Activar Log de Consultas
+`sudo nano /etc/mysql/mariadb.conf.d/50-server.cnf`
 
 En la sección [server] (generalmente la primera) pega las siguientes lineas, guarda con Ctrl + O y sal del editor con Ctrl + X
 
+```
 general_log_file = /var/log/mysql/mysql.log
 general_log = 1  
+```
 
-# Ejemplo de DB
-## Crear DB, tablas, insertar datos
-'''
+## Ejemplo de DB
+### Crear DB, tablas, insertar datos
+```
 CREATE DATABASE IF NOT EXISTS test;
 
 USE test;
@@ -52,9 +63,9 @@ VALUES('The Fellowship of the Ring',1,1),
       ('The Two Towers',1,1), ('The Return of the King',1,1),  
       ('The Sum of All Men',2,2), ('Brotherhood of the Wolf',2,2), 
       ('Wizardborn',2,2), ('The Hobbbit',0,1);
-'''  
+```  
 
-## Algunos comandos
+### Algunos comandos
 `SHOW TABLES;`  
 `DESCRIBE Books;`  
 `SELECT * FROM Books;`  
