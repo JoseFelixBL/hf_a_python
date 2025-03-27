@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, session
 from markupsafe import escape
 from vsearch import search4letters
-from DBcm import UseDatabase
+from DBcm import UseDatabase, DBConnectionError, CredentialsError
 import os
 from checker import check_logged_in
 
@@ -39,9 +39,12 @@ def do_search() -> 'html':
     letters = request.form['letters']
     results = str(search4letters(phrase, letters))
     title = 'Here are your results'
-    log_request(request, results)
-    return render_template('results.html', the_title=title, the_phrase=phrase,
-                           the_letters=letters, the_results=results)
+    try:
+        log_request(request, results)
+        return render_template('results.html', the_title=title, the_phrase=phrase,
+                               the_letters=letters, the_results=results)
+    except Exception as err:
+        print('***** Logging failed with error:', str(err))
 
 
 @app.route('/')
@@ -53,14 +56,23 @@ def entry_page() -> 'html':
 @app.route('/viewlog')
 @check_logged_in
 def view_the_log() -> 'html':
-    with UseDatabase(app.config['dbconfig']) as cursor:
-        _SQL = """select phrase, letters, ip, browser_string, results
-                from log"""
-        cursor.execute(_SQL)
-        content = cursor.fetchall()
-    title = 'Log View'
-    row_titles = ('Phrase', 'Letters', 'Remote_addr', 'User_agent', 'Results')
-    return render_template('viewlog.html', the_title=title, the_row_titles=row_titles, the_data=content)
+    try:
+        with UseDatabase(app.config['dbconfig']) as cursor:
+            _SQL = """select ts, phrase, letters, ip, browser_string, results
+                    from log"""
+            cursor.execute(_SQL)
+            content = cursor.fetchall()
+        title = 'Log View'
+        row_titles = ('Time Stamp', 'Phrase', 'Letters',
+                      'Remote_addr', 'User_agent', 'Results')
+        return render_template('viewlog.html', the_title=title, the_row_titles=row_titles, the_data=content)
+    except DBConnectionError as err:
+        print('Is your database switched on? Error:', str(err))
+    except CredentialsError as err:
+        print('User-id/Password issues. Error:', str(err))
+    except Exception as err:
+        print('Something went wrong:', str(err))
+    return 'error'
 
 
 @app.route('/login')
