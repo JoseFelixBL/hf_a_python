@@ -36,3 +36,5 @@ class UseDatabase:
         # Add any extra exception-handling-code AFTER doing the __exit__ things
         if exc_type is mariadb.ProgrammingError:
             raise SQLError(exc_value)
+        elif exc_type:
+            raise exc_type(exc_value)
