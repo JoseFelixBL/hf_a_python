@@ -5,7 +5,7 @@ from threading import Thread
 import os
 
 from vsearch import search4letters
-from DBcm import UseDatabase, DBConnectionError, CredentialsError
+from DBcm import UseDatabase, DBConnectionError, CredentialsError, SQLError
 from checker import check_logged_in
 
 from time import sleep

@@ -32,7 +32,15 @@
 - Crear un contenedor  
     `docker run <imagen>`  
     + Ejemplo:  
-        `docker run -it -p 5000:5000 -v ./static:/usr/src/app/static -v ./templates:/usr/src/app/templates vsweb:1.12 sh`
+        `docker run -it -p 5000:5000 -v ./static:/usr/src/app/static -v ./templates:/usr/src/app/templates vsweb:1.12 sh`  
+  
+  Docker run es la combinación de 3 comandos:  
+  + `docker pull` para traerte la imagen si no se encuientra en local  
+  + `docker create` para crear la imagen en base a un `Dockerfile`
+  + `docker start` para iuniciar el contenedor que acabamos de crear  
+
+  Podemos asignarle un nombre al contenedor con la opción `--name <nombre_del_contenedor>`
+
 
 - Ver contenedores corriendo:  
     `docker ps`  
@@ -64,37 +72,53 @@
 # JSON vs. YAML
 ## JSON: Para transferir datos entre sistemas  
 
+Es más específico:
+  - Se usan llaves para delimitar  
+  - Comillas para especificar texto  
+  - Corchetes para listas  
+  - Llaves para diccionarios  
+
 Ejemplo:  
 ```
-  nombre: José
-  apellido: Bello
-  edad: 25
-  activo: true
-  etiquetas:
-    - Instructor 
-    - Desarrollador
-  direccion: 
-    calle: Pepito
-    numero: 51
+    {
+        "nombre": "Jose",
+        "apellido": "Bello",
+        "edad": 62,
+        "activo": true
+        "etiquetas": [
+            "Instructor",
+            "Desarrollador"
+        ],
+        "dirección": {
+            "calle": "Pepito",
+            "numero": 51
+        }
+    }
+  
 ```  
 ## YAML - o YML - Para archivos de configuración  
 
+Menos específico:  
+  - Se usa la indentación  
+  - Para listas se usa `-`  
+  - Para diccionarios se usa la indentación y `:`  
+
 Ejemplo:  
 ```
-{
-  nombre: José,
-  apellido: Bello,
-  edad: 25,
-  activo: true,
-  etiquetas: [Instructor, Desarrollador],
-  direccion: {
-    calle: Pepito,
-    numero: 51
-  }
-}
+  nombre: Jose
+  apellido: Bello
+  edad: 62
+  activo: true
+  etiquetas:
+      - Instructor
+      - Desarrollador
+  dirección:
+      calle: Pepito
+      numero: 51
+
 ```  
 
-# Trabajando con múltiples contenedores - docker-compose.yml  
+# Trabajando con múltiples contenedores - `docker-compose.yml`  
 
 ## Partes de docker-compose.yml
 
@@ -156,4 +180,7 @@ volumes:
   gamify:
 ```  
 ## Ejecutar docker compose
-`docker compose up` para ejecutar todo lo que necesitamos/hemos edfinido en el _docker-compose.yml_.  
+`docker compose up` para ejecutar todo lo que necesitamos/hemos definido en el _docker-compose.yml_.  
+
+## Parar y borrar contenedores de docker compose
+`docker compose down` para parar los contenedores creados y que están ejecutando, y borrar también las redes.  
