@@ -72,4 +72,15 @@ Al usar `RUN --mount=type=bind,source=...` en Dockerfile no se monta el director
 Montar el  volumen desde `docker run --mount type=bind,...`  
 
 - `docker run -it -p 5000:5000 --mount type=bind,source=/home/jose/workspace/docker/hf_a_python/var,dst=/usr/src/app/var 
-vs_root:0.3`
+vs_root:0.3`  
+
+## 2025/04/18 - Versión arm64v8 en mariadb y update Docker en RPi 400
+- Corregir vsearchweb.py
+- Agregar la versión de mariadb para Raspberry Pi, `image: arm64v8/mariadb:latest`
+- Desinstalar docker.io y docker-compose porque eran versiones desactualizadas (pasa en docker desde apt) y cargarlas directamente desde Docker con curl:  
+  + `curl -sSL https://get-docker.com | sh`  
+- subir a github
+- descargarlo en RPi 400
+- ejecutarlo  
+  + `docker composae -f docker-compose.prod.ARM.yml up --build -d`  
+  
