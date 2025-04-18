@@ -5,7 +5,7 @@ services:
   # Servicio de mariadb-server
   db:
     # Cogemos la imagen de mariadb server
-    image: mariadb:latest
+    image: arm64v8/mariadb:latest
     # Le damos nombre al contenedor
     container_name: mariadb_container
     # Variables de entorno, provisionadas pero no usadas de momento
