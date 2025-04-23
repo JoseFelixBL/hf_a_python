@@ -74,13 +74,19 @@ Montar el  volumen desde `docker run --mount type=bind,...`
 - `docker run -it -p 5000:5000 --mount type=bind,source=/home/jose/workspace/docker/hf_a_python/var,dst=/usr/src/app/var 
 vs_root:0.3`  
 
-## 2025/04/18 - Versión arm64v8 en mariadb y update Docker en RPi 400
-- Corregir vsearchweb.py
-- Agregar la versión de mariadb para Raspberry Pi, `image: arm64v8/mariadb:latest`
-- Desinstalar docker.io y docker-compose porque eran versiones desactualizadas (pasa en docker desde apt) y cargarlas directamente desde Docker con curl:  
-  + `curl -sSL https://get-docker.com | sh`  
-- subir a github
-- descargarlo en RPi 400
-- ejecutarlo  
-  + `docker composae -f docker-compose.prod.ARM.yml up --build -d`  
-  
+## 2025/04/23 - Agregar mariadb_admin para hacer backups de los logs  
+
+Como ejercicio he creado otro servicio en docker compose para llevar a cabo labores de mantenimiento sin tener que parar el servicio, específicamente, hacer un backup de la base de datos `vsearchlogDB`.  
+
+No ha hecho falta modificar `docker-compose.prod.ARM.yml`, solo se ha agregado un directorio `database_admin` y dentro de él: `docker-compose.prod.yml` con la definición del contenedor y la acción a realizar.
+
+Tener los docker-compose separados nos permite elegir si queremos:  
+- Iniciar el servicio:
+  - `docker compose -f docker-compose.prod.ARM.yml up -d`
+- Hacer un Backup en un servicio iniciado:  
+  - `docker compose -f docker-compose.prod.ARM.yml -f ./database_admin/docker-compose.prod.yml up db_admin`  
+- Iniciar el servicio y hacer un backup de inmediato:
+  - Esta opción mejor no intentarla porque la base de datos tarda en arrancar porque hace procesos de inicio, pero como el demonio está arrancado el servicio db_admin intenta conectar a la base de datos y no está disponible...  
+  - `docker compose -f docker-compose.prod.ARM.yml -f ./database_admin/docker-compose.prod.yml up -d`  
+
+He decidido crear el shell-script y montarlo en el volumen para ponerle nombres significativos a los ficheros generados agregando el nombre de la base de datos y la fecha y hore del backup.  
