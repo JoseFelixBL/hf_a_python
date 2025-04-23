@@ -90,3 +90,9 @@ Tener los docker-compose separados nos permite elegir si queremos:
   - `docker compose -f docker-compose.prod.ARM.yml -f ./database_admin/docker-compose.prod.yml up -d`  
 
 He decidido crear el shell-script y montarlo en el volumen para ponerle nombres significativos a los ficheros generados agregando el nombre de la base de datos y la fecha y hore del backup.  
+
+## 2025/04/23 - Error response from daemon: failed to setup copntainer networking: network ae3b... not found  
+
+Al parecer este error puede aparecer cuando eliminamos redes con `docker network prune`, en algún lado se queda la referencia a una red anterior que trata de encontrar.
+
+Para resolverlo, agregar la opción `--force-recreate` al final del `docker compose up --force-recreate`
