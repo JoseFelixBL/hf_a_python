@@ -1,0 +1,25 @@
+services:
+  db_admin:
+    image: arm64v8/mariadb:latest
+    container_name: mariadb_admin
+    # build:
+    #   context: ./database_admin
+    #   args:
+    #     MARIADB_ROOT_PASSWORD: rootpassword
+    depends_on:
+      - db
+    environment:
+      - MARIADB_ROOT_PASSWORD=rootpassword
+      - MARIADB_DATABASE=vsearchlogDB
+      - MARIADB_USER=vsearch
+      - MARIADB_PASSWORD=vsearchpasswd
+    volumes:
+      # - ./database_admin/backups:/backups
+      - ./database_admin:/database_admin
+    # command: /bin/bash -c 'mariadb-dump -h db --databases vsearchlogDB -u root -p"${MARIADB_ROOT_PASSWORD}" > backups/db.sql' 
+    # command: /bin/bash -c 'mariadb-dump \
+    #   -h mariadb_container \
+    #   --databases vsearchlogDB \
+    #   -u root -prootpassword \
+    #   > backups/db_backup.sql' 
+    command: /bin/bash -c '/database_admin/make_db_backup.sh' 

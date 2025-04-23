@@ -1,0 +1,1 @@
+COPY --chmod=+x make_db_backup.sh ./
