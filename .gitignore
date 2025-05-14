@@ -4,3 +4,6 @@ __pycache__/
 *.tar
 .vscode/
 db/data/
+database/
+database_admin/backups.kk/
+database_admin/backups/

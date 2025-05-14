@@ -14,7 +14,7 @@ services:
       - MARIADB_USER=vsearch
       - MARIADB_PASSWORD=vsearchpasswd
     volumes:
-      # - ./database_admin/backups:/backups
+      - ./database_admin/backups:/backups
       - ./database_admin:/database_admin
     # command: /bin/bash -c 'mariadb-dump -h db --databases vsearchlogDB -u root -p"${MARIADB_ROOT_PASSWORD}" > backups/db.sql' 
     # command: /bin/bash -c 'mariadb-dump \
