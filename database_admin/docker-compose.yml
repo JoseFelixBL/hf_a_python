@@ -1,0 +1,14 @@
+services:
+  db_admin:
+    context: ./database_admin
+    image: arm64v8/mariadb:latest
+    depends_on:
+      - db
+    environment:
+      MARIADB_ROOT_PASSWORD: rootpassword
+      MARIADB_DATABASE: vsearchlogDB
+      MARIADB_USER: vsearch
+      MARIADB_PASSWORD: vsearchpasswd
+    volumes:
+      - ./backups:/backups
+    command: /bin/bash -c '  mariadb-dump -h db  --databases log  -u root -p"$MARIADB_ROOT_PASSWORD" > backup/db.sql'
